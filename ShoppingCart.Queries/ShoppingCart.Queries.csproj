@@ -1,21 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ShoppingCart.Core\ShoppingCart.Core.csproj" />
     <ProjectReference Include="..\ShoppingCart.Data.Access\ShoppingCart.Data.Access.csproj" />
     <ProjectReference Include="..\ShoppingCart.Data.Model\ShoppingCart.Data.Model.csproj" />
     <ProjectReference Include="..\ShoppingCart.Models\ShoppingCart.Model.csproj" />
-    <ProjectReference Include="..\ShoppingCart.Queries\ShoppingCart.Queries.csproj" />
     <ProjectReference Include="..\ShoppingCart.Security\ShoppingCart.Security.csproj" />
   </ItemGroup>
 
