@@ -14,12 +14,12 @@ namespace ShoppingCart.IoC
 {
     public static class ContainerSetup
     {
-        public static void Setup(IServiceCollection services, IConfigurationRoot configuration)
+        public static void Setup(IServiceCollection services, IConfiguration configuration)
         {
-            AddUow(services, configuration);
+            //AddUow(services, configuration);
             AddQueryProcessors(services);
-            ConfigureAutoMapper(services);
-            ConfigureAuth(services);
+            //ConfigureAutoMapper(services);
+            //ConfigureAuth(services);
         }
 
         private static void ConfigureAuth(IServiceCollection services)
@@ -56,7 +56,7 @@ namespace ShoppingCart.IoC
             //services.AddTransient<IAutoMapper, AutoMapperAdapter>();
         }
 
-        private static void AddUow(IServiceCollection services, IConfigurationRoot configuration)
+        private static void AddUow(IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration["Data:main"];
 
