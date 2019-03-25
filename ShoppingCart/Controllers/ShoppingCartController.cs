@@ -1,15 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using ShoppingCart.Queries;
 
 namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    [AllowAnonymous]
+    public class ShoppingCartController : ControllerBase
     {
+        private readonly IProductsQueryProcessor queryProcessor;
+
+        public ShoppingCartController(IProductsQueryProcessor queryProcessor)
+        {
+            this.queryProcessor = queryProcessor;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()

@@ -46,23 +46,21 @@ namespace ShoppingCart
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ContainerSetup.Setup(services, Configuration);
-
             services.AddMvc(options => { options.Filters.Add(new ApiExceptionFilter()); })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(o =>
+                .AddJsonOptions(options =>
                     {
-                        o.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+                        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
                     });
 
-            // TODO: Bu nedir?
-            services.AddNodeServices();
-
             // Register the Swagger generator, defining one or more Swagger documents
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingCart", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingCart", Version = "v1" });
                 });
+
+            // Configure other custom services.
+            ContainerSetup.Setup(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,9 +72,21 @@ namespace ShoppingCart
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // The default HSTS value is 30 days.
+                // You may want to change this for production scenarios,
+                // see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingCart API V1");
+                });
 
             app.UseHttpsRedirection();
             app.UseMvc();

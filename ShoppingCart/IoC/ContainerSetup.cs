@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
@@ -16,10 +17,10 @@ namespace ShoppingCart.IoC
     {
         public static void Setup(IServiceCollection services, IConfiguration configuration)
         {
-            //AddUow(services, configuration);
             AddQueryProcessors(services);
-            //ConfigureAutoMapper(services);
+            AddUow(services, configuration);
             //ConfigureAuth(services);
+            //ConfigureAutoMapper(services);
         }
 
         private static void ConfigureAuth(IServiceCollection services)
@@ -33,17 +34,17 @@ namespace ShoppingCart.IoC
 
         private static void AddQueryProcessors(IServiceCollection services)
         {
-            var exampleProcessorType = typeof(ProductsQueryProcessor);
+            Type exampleProcessorType = typeof(ProductsQueryProcessor);
 
-            var types = (from t in exampleProcessorType.GetTypeInfo().Assembly.GetTypes()
+            Type[] types = (from t in exampleProcessorType.GetTypeInfo().Assembly.GetTypes()
                          where t.Namespace == exampleProcessorType.Namespace
                                && t.GetTypeInfo().IsClass
                                && t.GetTypeInfo().GetCustomAttribute<CompilerGeneratedAttribute>() == null
                          select t).ToArray();
 
-            foreach (var type in types)
+            foreach (Type type in types)
             {
-                var interfaceQ = type.GetTypeInfo().GetInterfaces().First();
+                Type interfaceQ = type.GetTypeInfo().GetInterfaces().First();
                 services.AddScoped(interfaceQ, type);
             }
         }
@@ -62,14 +63,14 @@ namespace ShoppingCart.IoC
 
             services.AddEntityFrameworkSqlServer();
 
-            // services.AddDbContext<MainDbContext>(options =>
-            //     options.UseSqlServer(connectionString));
+            services.AddDbContext<MainDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
-            // services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<MainDbContext>()));
+            services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<MainDbContext>()));
 
-            // services.AddScoped<IActionTransactionHelper, ActionTransactionHelper>();
+            services.AddScoped<IActionTransactionHelper, ActionTransactionHelper>();
 
-            // services.AddScoped<UnitOfWorkFilterAttribute>();
+            services.AddScoped<UnitOfWorkFilterAttribute>();
         }
     }
 }
