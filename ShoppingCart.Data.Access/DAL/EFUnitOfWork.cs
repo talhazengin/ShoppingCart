@@ -8,14 +8,14 @@ namespace ShoppingCart.Data.Access.DAL
 {
     public class EFUnitOfWork : IUnitOfWork
     {
-        private DbContext _context;
+        private ShoppingCartDbContext _context;
 
-        public EFUnitOfWork(DbContext context)
+        public EFUnitOfWork(ShoppingCartDbContext context)
         {
             _context = context;
         }
 
-        public DbContext Context => _context;
+        public ShoppingCartDbContext Context => _context;
 
         public ITransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Snapshot)
         {
