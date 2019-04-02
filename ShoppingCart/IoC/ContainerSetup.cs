@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,17 +18,6 @@ namespace ShoppingCart.IoC
         {
             AddQueryProcessors(services);
             AddUow(services, configuration);
-            //ConfigureAuth(services);
-            //ConfigureAutoMapper(services);
-        }
-
-        private static void ConfigureAuth(IServiceCollection services)
-        {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.AddScoped<ITokenBuilder, TokenBuilder>();
-
-            //services.AddScoped<ISecurityContext, SecurityContext>();
         }
 
         private static void AddQueryProcessors(IServiceCollection services)
@@ -50,22 +37,13 @@ namespace ShoppingCart.IoC
             }
         }
 
-        private static void ConfigureAutoMapper(IServiceCollection services)
-        {
-            //var mapperConfig = AutoMapperConfigurator.Configure();
-            //var mapper = mapperConfig.CreateMapper();
-            //services.AddSingleton(x => mapper);
-            //services.AddTransient<IAutoMapper, AutoMapperAdapter>();
-        }
-
         private static void AddUow(IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration["Data:main"];
+            //// Connection string is not used for this demo application. // string connectionString = configuration["Data:main"];
 
             services.AddEntityFrameworkSqlServer();
 
-            services.AddDbContext<ShoppingCartDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            services.AddDbContext<ShoppingCartDbContext>(); // options => options.UseSqlServer(connectionString)
 
             services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<ShoppingCartDbContext>()));
 

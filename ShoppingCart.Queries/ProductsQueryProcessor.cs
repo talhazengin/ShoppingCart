@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 
 using ShoppingCart.Core;
-using ShoppingCart.Model;
 using ShoppingCart.Data.Access.DAL;
 using ShoppingCart.Data.Model;
+using ShoppingCart.Model;
 
 namespace ShoppingCart.Queries
 {
@@ -19,27 +19,13 @@ namespace ShoppingCart.Queries
 
         public IQueryable<Product> Get()
         {
-            var query = GetQuery();
+            IQueryable<Product> query = GetAllProductsQuery();
             return query;
-        }
-        
-        private IQueryable<Product> GetQuery()
-        {
-            var q = _uow.Query<Product>()
-                .Where(x => !x.IsDeleted);
-
-            //if (!_securityContext.IsAdministrator)
-            //{
-            //    var userId = _securityContext.User.Id;
-            //    q = q.Where(x => x.UserId == userId);
-            //}
-
-            return q;
         }
 
         public Product Get(int id)
         {
-            var user = GetQuery().FirstOrDefault(x => x.Id == id);
+            Product user = GetAllProductsQuery().FirstOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -53,14 +39,12 @@ namespace ShoppingCart.Queries
         {
             var item = new Product
             {
-                //UserId = _securityContext.User.Id,
-                //Amount = model.Amount,
-                //Comment = model.Comment,
-                //Date = model.Date,
-                Description = model.Description,
+                Name = model.Name,
+                Description = model.Description
             };
 
             _uow.Add(item);
+
             await _uow.CommitAsync();
 
             return item;
@@ -68,35 +52,46 @@ namespace ShoppingCart.Queries
 
         public async Task<Product> Update(int id, UpdateProductModel model)
         {
-            var product = GetQuery().FirstOrDefault(x => x.Id == id);
+            Product product = GetAllProductsQuery().FirstOrDefault(x => x.Id == id);
 
             if (product == null)
             {
                 throw new NotFoundException("Product is not found");
             }
 
-            //expense.Amount = model.Amount;
-            //expense.Comment = model.Comment;
-            //expense.Description = model.Description;
-            //expense.Date = model.Date;
+            product.Name = model.Name;
+            product.Description = model.Description;
 
             await _uow.CommitAsync();
+
             return product;
         }
 
         public async Task Delete(int id)
         {
-            var user = GetQuery().FirstOrDefault(u => u.Id == id);
+            Product user = GetAllProductsQuery().FirstOrDefault(u => u.Id == id);
 
             if (user == null)
             {
                 throw new NotFoundException("Product is not found");
             }
 
-            if (user.IsDeleted) return;
+            if (user.IsDeleted)
+            {
+                return;
+            }
 
             user.IsDeleted = true;
+
             await _uow.CommitAsync();
+        }
+
+        private IQueryable<Product> GetAllProductsQuery()
+        {
+            IQueryable<Product> query = _uow.Query<Product>()
+                .Where(x => !x.IsDeleted);
+
+            return query;
         }
     }
 }

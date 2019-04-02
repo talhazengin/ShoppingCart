@@ -8,66 +8,64 @@ namespace ShoppingCart.Data.Access.DAL
 {
     public class EFUnitOfWork : IUnitOfWork
     {
-        private ShoppingCartDbContext _context;
-
         public EFUnitOfWork(ShoppingCartDbContext context)
         {
-            _context = context;
+            Context = context;
         }
 
-        public ShoppingCartDbContext Context => _context;
+        public ShoppingCartDbContext Context { get; private set; }
 
         public ITransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Snapshot)
         {
-            return new DbTransaction(_context.Database.BeginTransaction(isolationLevel));
+            return new DbTransaction(Context.Database.BeginTransaction(isolationLevel));
         }
 
         public void Add<T>(T obj)
             where T : class
         {
-            var set = _context.Set<T>();
+            DbSet<T> set = Context.Set<T>();
             set.Add(obj);
         }
 
         public void Update<T>(T obj)
             where T : class
         {
-            var set = _context.Set<T>();
+            DbSet<T> set = Context.Set<T>();
             set.Attach(obj);
-            _context.Entry(obj).State = EntityState.Modified;
+            Context.Entry(obj).State = EntityState.Modified;
         }
 
         void IUnitOfWork.Remove<T>(T obj)
         {
-            var set = _context.Set<T>();
+            DbSet<T> set = Context.Set<T>();
             set.Remove(obj);
         }
 
         public IQueryable<T> Query<T>()
             where T : class
         {
-            return _context.Set<T>();
+            return Context.Set<T>();
         }
 
         public void Commit()
         {
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public async Task CommitAsync()
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
 
         public void Attach<T>(T newUser) where T : class
         {
-            var set = _context.Set<T>();
+            DbSet<T> set = Context.Set<T>();
             set.Attach(newUser);
         }
 
         public void Dispose()
         {
-            _context = null;
+            Context = null;
         }
     }
 }
