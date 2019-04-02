@@ -18,7 +18,6 @@
     <ProjectReference Include="..\ShoppingCart.Data.Model\ShoppingCart.Data.Model.csproj" />
     <ProjectReference Include="..\ShoppingCart.Models\ShoppingCart.Model.csproj" />
     <ProjectReference Include="..\ShoppingCart.Queries\ShoppingCart.Queries.csproj" />
-    <ProjectReference Include="..\ShoppingCart.Security\ShoppingCart.Security.csproj" />
   </ItemGroup>
 
 </Project>

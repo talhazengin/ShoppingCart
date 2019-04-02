@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Expenses.Filters
+namespace ShoppingCart.Filters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {

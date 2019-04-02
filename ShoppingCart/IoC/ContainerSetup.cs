@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Security;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using ShoppingCart.Data.Access.DAL;
+using ShoppingCart.Filters;
+using ShoppingCart.Helpers;
 using ShoppingCart.Queries;
 
 namespace ShoppingCart.IoC
@@ -63,10 +64,10 @@ namespace ShoppingCart.IoC
 
             services.AddEntityFrameworkSqlServer();
 
-            services.AddDbContext<MainDbContext>(options =>
+            services.AddDbContext<ShoppingCartDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<MainDbContext>()));
+            services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<ShoppingCartDbContext>()));
 
             services.AddScoped<IActionTransactionHelper, ActionTransactionHelper>();
 

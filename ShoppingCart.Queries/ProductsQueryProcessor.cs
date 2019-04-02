@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Expenses.Api.Common.Exceptions;
-using Expenses.Security;
-
+using ShoppingCart.Core;
 using ShoppingCart.Model;
 using ShoppingCart.Data.Access.DAL;
 using ShoppingCart.Data.Model;
@@ -16,12 +14,10 @@ namespace ShoppingCart.Queries
     public class ProductsQueryProcessor : IProductsQueryProcessor
     {
         private readonly IUnitOfWork _uow;
-        private readonly ISecurityContext _securityContext;
 
-        public ProductsQueryProcessor(IUnitOfWork uow, ISecurityContext securityContext)
+        public ProductsQueryProcessor(IUnitOfWork uow)
         {
             _uow = uow;
-            _securityContext = securityContext;
         }
 
         public IQueryable<Product> Get()
@@ -50,7 +46,7 @@ namespace ShoppingCart.Queries
 
             if (user == null)
             {
-                throw new NotFoundException("Expense is not found");
+                throw new NotFoundException("Product is not found");
             }
 
             return user;
@@ -75,11 +71,11 @@ namespace ShoppingCart.Queries
 
         public async Task<Product> Update(int id, UpdateProductModel model)
         {
-            var expense = GetQuery().FirstOrDefault(x => x.Id == id);
+            var product = GetQuery().FirstOrDefault(x => x.Id == id);
 
-            if (expense == null)
+            if (product == null)
             {
-                throw new NotFoundException("Expense is not found");
+                throw new NotFoundException("Product is not found");
             }
 
             //expense.Amount = model.Amount;
@@ -88,7 +84,7 @@ namespace ShoppingCart.Queries
             //expense.Date = model.Date;
 
             await _uow.CommitAsync();
-            return expense;
+            return product;
         }
 
         public async Task Delete(int id)
@@ -97,7 +93,7 @@ namespace ShoppingCart.Queries
 
             if (user == null)
             {
-                throw new NotFoundException("Expense is not found");
+                throw new NotFoundException("Product is not found");
             }
 
             if (user.IsDeleted) return;

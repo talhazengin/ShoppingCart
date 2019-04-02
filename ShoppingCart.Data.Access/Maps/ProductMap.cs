@@ -9,7 +9,7 @@ namespace ShoppingCart.Data.Access.Maps
         public void Visit(ModelBuilder builder)
         {
             builder.Entity<Product>()
-                .ToTable("Expenses")
+                .ToTable("Product")
                 .HasKey(x => x.Id);
         }
     }

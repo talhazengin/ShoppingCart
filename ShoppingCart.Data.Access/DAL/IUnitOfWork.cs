@@ -1,10 +1,11 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShoppingCart.Data.Access.DAL
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         ITransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Snapshot);
 

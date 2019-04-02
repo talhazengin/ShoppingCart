@@ -1,26 +1,27 @@
-﻿//using Expenses.Helpers;
-//using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 
-//namespace Expenses.Filters
-//{
-//    public class UnitOfWorkFilterAttribute : ActionFilterAttribute
-//    {
-//        private readonly IActionTransactionHelper _helper;
+using ShoppingCart.Helpers;
 
-//        public UnitOfWorkFilterAttribute(IActionTransactionHelper helper)
-//        {
-//            _helper = helper;
-//        }
+namespace ShoppingCart.Filters
+{
+    public class UnitOfWorkFilterAttribute : ActionFilterAttribute
+    {
+        private readonly IActionTransactionHelper _helper;
 
-//        public override void OnActionExecuting(ActionExecutingContext context)
-//        {
-//            _helper.BeginTransaction();
-//        }
+        public UnitOfWorkFilterAttribute(IActionTransactionHelper helper)
+        {
+            _helper = helper;
+        }
 
-//        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
-//        {
-//            _helper.EndTransaction(actionExecutedContext);
-//            _helper.CloseSession();
-//        }
-//    }
-//}
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _helper.BeginTransaction();
+        }
+
+        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
+        {
+            _helper.EndTransaction(actionExecutedContext);
+            _helper.CloseSession();
+        }
+    }
+}

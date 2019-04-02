@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net;
-using Expenses.Api.Common.Exceptions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Expenses.Filters
+using ShoppingCart.Core;
+
+namespace ShoppingCart.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
