@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShoppingCart.Core
+namespace ShoppingCart.Core.Exceptions
 {
     public class ForbiddenException : Exception
     {

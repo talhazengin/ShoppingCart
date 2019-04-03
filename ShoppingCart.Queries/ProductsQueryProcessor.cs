@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using ShoppingCart.Core;
+using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Data.Access.DAL;
 using ShoppingCart.Data.Model;
 using ShoppingCart.Model;
@@ -20,7 +21,7 @@ namespace ShoppingCart.Queries
             _uow = uow;
         }
 
-        public IQueryable<Product> Get()
+        public IQueryable<Product> GetAll()
         {
             IQueryable<Product> query = GetAllProductsQuery();
             return query;

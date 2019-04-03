@@ -47,7 +47,7 @@ namespace ShoppingCart
                 });
 
             // Configure other custom services.
-            ContainerSetup.Setup(services, Configuration);
+            ContainerSetup.Setup(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using ShoppingCart.Model;
 using ShoppingCart.Data.Model;
+using ShoppingCart.Model;
 
 namespace ShoppingCart.Queries
 {
     public interface IProductsQueryProcessor
     {
-        IQueryable<Product> Get();
+        IQueryable<Product> GetAll();
 
         Product Get(int id);
 

@@ -8,43 +8,48 @@ namespace ShoppingCart.Helpers
 {
     public class ActionTransactionHelper : IActionTransactionHelper
     {
-        private IUnitOfWork _uow;
-        private ITransaction _tx;
+        private readonly ILogger _logger;
 
-        private readonly ILogger _log;
+        private IUnitOfWork _unitOfWork;
+        private ITransaction _transaction;
 
-        public ActionTransactionHelper(IUnitOfWork uow, ILogger log)
+        public ActionTransactionHelper(IUnitOfWork unitOfWork, ILogger logger)
         {
-            _uow = uow;
-            _log = log;
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         private bool TransactionHandled { get; set; }
+
         private bool SessionClosed { get; set; }
         
         public void BeginTransaction()
         {
-            _tx = _uow.BeginTransaction();
+            _transaction = _unitOfWork.BeginTransaction();
         }
+
         public void EndTransaction(ActionExecutedContext filterContext)
         {
-            if (_tx == null) throw new NotSupportedException();
+            if (_transaction == null)
+            {
+                throw new NotSupportedException();
+            }
+
             if (filterContext.Exception == null)
             {
-                _uow.Commit();
-                _tx.Commit();
+                _unitOfWork.Commit();
+                _transaction.Commit();
             }
             else
             {
                 try
                 {
-                    _tx.Rollback();
+                    _transaction.Rollback();
                 }
                 catch (Exception ex)
                 {
                     throw new AggregateException(filterContext.Exception, ex);
                 }
-                
             }
 
             TransactionHandled = true;
@@ -52,16 +57,16 @@ namespace ShoppingCart.Helpers
 
         public void CloseSession()
         {
-            if (_tx != null)
+            if (_transaction != null)
             {
-                _tx.Dispose();
-                _tx = null;
+                _transaction.Dispose();
+                _transaction = null;
             }
 
-            if (_uow != null)
+            if (_unitOfWork != null)
             {
-                _uow.Dispose();
-                _uow = null;
+                _unitOfWork.Dispose();
+                _unitOfWork = null;
             }
 
             SessionClosed = true;

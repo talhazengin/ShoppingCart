@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 using ShoppingCart.Core;
+using ShoppingCart.Core.Exceptions;
 
 namespace ShoppingCart.Filters
 {
@@ -12,22 +13,20 @@ namespace ShoppingCart.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is NotFoundException)
+            if (context.Exception is NotFoundException notFoundException)
             {
                 // handle explicit 'known' API errors
-                var ex = context.Exception as NotFoundException;
                 context.Exception = null;
 
-                context.Result = new JsonResult(ex.Message);
+                context.Result = new JsonResult(notFoundException.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             }
-            else if (context.Exception is BadRequestException)
+            else if (context.Exception is BadRequestException badRequestException)
             {
                 // handle explicit 'known' API errors
-                var ex = context.Exception as BadRequestException;
                 context.Exception = null;
 
-                context.Result = new JsonResult(ex.Message);
+                context.Result = new JsonResult(badRequestException.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
             else if (context.Exception is UnauthorizedAccessException)
@@ -40,7 +39,6 @@ namespace ShoppingCart.Filters
                 context.Result = new JsonResult(context.Exception.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             }
-
 
             base.OnException(context);
         }
