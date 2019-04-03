@@ -8,6 +8,9 @@ using ShoppingCart.Model;
 
 namespace ShoppingCart.Queries
 {
+    /// <summary>
+    /// Processes queries on products.
+    /// </summary>
     public class ProductsQueryProcessor : IProductsQueryProcessor
     {
         private readonly IUnitOfWork _uow;

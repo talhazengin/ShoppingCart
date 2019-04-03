@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +19,7 @@ namespace ShoppingCart.IoC
         public static void Setup(IServiceCollection services, IConfiguration configuration)
         {
             AddQueryProcessors(services);
-            AddUow(services, configuration);
+            AddUow(services);
         }
 
         private static void AddQueryProcessors(IServiceCollection services)
@@ -37,13 +39,12 @@ namespace ShoppingCart.IoC
             }
         }
 
-        private static void AddUow(IServiceCollection services, IConfiguration configuration)
+        private static void AddUow(IServiceCollection services)
         {
-            //// Connection string is not used for this demo application. // string connectionString = configuration["Data:main"];
-
             services.AddEntityFrameworkSqlServer();
 
-            services.AddDbContext<ShoppingCartDbContext>(); // options => options.UseSqlServer(connectionString)
+            // Using in memory database for testing purpose.
+            services.AddDbContext<ShoppingCartDbContext>(builder => builder.UseInMemoryDatabase("InMemoryTestDb"));
 
             services.AddScoped<IUnitOfWork>(ctx => new EFUnitOfWork(ctx.GetRequiredService<ShoppingCartDbContext>()));
 

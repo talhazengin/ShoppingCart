@@ -4,6 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using ShoppingCart.Data.Model;
+using ShoppingCart.Filters;
+using ShoppingCart.Model;
 using ShoppingCart.Queries;
 
 namespace ShoppingCart.Controllers
@@ -13,43 +16,43 @@ namespace ShoppingCart.Controllers
     [AllowAnonymous]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IProductsQueryProcessor queryProcessor;
+        private readonly IProductsQueryProcessor _queryProcessor;
 
         public ShoppingCartController(IProductsQueryProcessor queryProcessor)
         {
-            this.queryProcessor = queryProcessor;
+            _queryProcessor = queryProcessor;
         }
 
-        // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Product>> Get()
         {
-            return queryProcessor.Get().Select(product => product.Name).ToList();
+            return _queryProcessor.Get().ToList();
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<Product> Get(int id)
         {
-            return "value";
+            return _queryProcessor.Get(id);
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ValidateModel]
+        public async void Post([FromBody] CreateProductModel requestModel)
         {
+            await _queryProcessor.Create(requestModel);
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ValidateModel]
+        public async void Put(int id, [FromBody] UpdateProductModel requestModel)
         {
+            await _queryProcessor.Update(id, requestModel);
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            await _queryProcessor.Delete(id);
         }
     }
 }
