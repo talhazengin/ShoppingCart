@@ -8,6 +8,8 @@
 
         public string Description { get; set; }
 
+        public int StockCount { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }

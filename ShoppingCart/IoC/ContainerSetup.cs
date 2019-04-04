@@ -21,7 +21,7 @@ namespace ShoppingCart.IoC
         public static void Setup(IServiceCollection services)
         {
             AddQueryProcessors(services);
-            AddUow(services);
+            AddUnitOfWork(services);
             ConfigureAutoMapper(services);
         }
 
@@ -35,7 +35,7 @@ namespace ShoppingCart.IoC
 
         private static void AddQueryProcessors(IServiceCollection services)
         {
-            Type exampleProcessorType = typeof(ProductsQueryProcessor);
+            Type exampleProcessorType = typeof(ProductStockQueryProcessor);
 
             Type[] types = (from t in exampleProcessorType.GetTypeInfo().Assembly.GetTypes()
                          where t.Namespace == exampleProcessorType.Namespace
@@ -50,7 +50,7 @@ namespace ShoppingCart.IoC
             }
         }
 
-        private static void AddUow(IServiceCollection services)
+        private static void AddUnitOfWork(IServiceCollection services)
         {
             services.AddEntityFrameworkSqlServer();
 
