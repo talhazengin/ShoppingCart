@@ -33,7 +33,7 @@ namespace ShoppingCart
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => { options.Filters.Add(new ApiExceptionFilter()); })
+            services.AddMvc(options => options.Filters.Add(new ApiExceptionFilter()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                     {
@@ -50,19 +50,19 @@ namespace ShoppingCart
             ContainerSetup.Setup(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days.
-                // You may want to change this for production scenarios,
-                // see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    // The default HSTS value is 30 days.
+            //    // You may want to change this for production scenarios,
+            //    // see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -74,7 +74,7 @@ namespace ShoppingCart
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingCart API V1");
                 });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

@@ -15,16 +15,18 @@ namespace ShoppingCart.Filters
             switch (context.Exception)
             {
                 case NotFoundException notFoundException:
+
                     // handle explicit 'known' API errors
-                    context.Exception = null;
+                    context.ExceptionHandled = true;
 
                     context.Result = new JsonResult(notFoundException.Message);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
 
                 case BadRequestException badRequestException:
+
                     // handle explicit 'known' API errors
-                    context.Exception = null;
+                    context.ExceptionHandled = true;
 
                     context.Result = new JsonResult(badRequestException.Message);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;

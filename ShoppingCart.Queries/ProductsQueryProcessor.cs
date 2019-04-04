@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using ShoppingCart.Core;
 using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Data.Access.DAL;
 using ShoppingCart.Data.Model;
@@ -41,6 +40,15 @@ namespace ShoppingCart.Queries
 
         public async Task<Product> Create(CreateProductModel model)
         {
+            // Assuming there should not be same name product in the system.
+            // So check for any product saved with same name before.
+            bool isAnyProductWithSameName = GetAll().Any(product => product.Name == model.Name);
+
+            if (isAnyProductWithSameName)
+            {
+                throw new BadRequestException("A product with same name created before!");
+            }
+
             var item = new Product
             {
                 Name = model.Name,

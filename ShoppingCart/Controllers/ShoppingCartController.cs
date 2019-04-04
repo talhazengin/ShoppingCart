@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Data.Model;
 using ShoppingCart.Filters;
 using ShoppingCart.Maps;
@@ -15,6 +14,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiExceptionFilter]
     [AllowAnonymous] // Security and authorization features are not implemented for this demo project.
     public class ShoppingCartController : ControllerBase
     {
@@ -28,6 +28,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet]
+        [ApiExceptionFilter]
         public ActionResult<IEnumerable<ProductModel>> Get()
         {
             IQueryable<Product> products = _queryProcessor.GetAll();
@@ -38,6 +39,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiExceptionFilter]
         public ActionResult<ProductModel> Get(int id)
         {
             Product product = _queryProcessor.Get(id);
@@ -47,27 +49,22 @@ namespace ShoppingCart.Controllers
 
         [HttpPost]
         [ValidateModel]
+        [ApiExceptionFilter]
         public async void Post([FromBody] CreateProductModel requestModel)
         {
-            // Checks for any product saved with same name before.
-            bool isAnyProductWithSameName = _queryProcessor.GetAll().Any(product => product.Name == requestModel.Name);
-
-            if (isAnyProductWithSameName)
-            {
-                throw new BadRequestException("A product with same name created before!");
-            }
-
             await _queryProcessor.Create(requestModel);
         }
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [ApiExceptionFilter]
         public async void Put(int id, [FromBody] UpdateProductModel requestModel)
         {
             await _queryProcessor.Update(id, requestModel);
         }
 
         [HttpDelete("{id}")]
+        [ApiExceptionFilter]
         public async void Delete(int id)
         {
             await _queryProcessor.Delete(id);
