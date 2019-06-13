@@ -1,2 +1,2 @@
 # ShoppingCart
-A fully featured shopping cart api for ASP.NET Core
+A fully featured web api for a shopping cart with ASP.NET Core
